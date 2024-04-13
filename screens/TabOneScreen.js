@@ -1,35 +1,51 @@
-import { StyleSheet } from "react-native";
+/* eslint-disable import/no-cycle */
 
-import EditScreenInfo from "../components/EditScreenInfo";
-import { Text, View } from "../components/Themed";
+// @ts-ignore TS(2307): Assets are from Javascript files
+import { EventSVG, SpotsSVG } from '../assets/SVG';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import TabTwoScreen from './TabTwoScreen';
+import TabThreeScreen from './TabThreeScreen';
+import TabFourScreen from './TabFourScreen';
 
-export default function TabOneScreen() {
+const HomeTab = createMaterialTopTabNavigator();
+
+export default function TabOneScreen({ navigation }) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
+    <HomeTab.Navigator
+      sceneContainerStyle={{
+        backgroundColor: "#fff",
+      }}
+      screenOptions={({ route }) => ({
+        tabBarShowLabel: false,
+        tabBarIndicatorStyle: {
+          backgroundColor: 'transparent',
+        },
+        tabBarStyle: {
+          borderTopWidth: 0,
+        },
+        tabBarIcon: ({ focused }) => {
+          if (route.name === 'SpotsTab') {
+            return (
+              <SpotsSVG
+              />
+            );
+          } else if (route.name === 'EventsTab') {
+            return (
+              <EventSVG
+              />
+            );
+          }
+        },
+      })}
+    >
+      <HomeTab.Screen
+        name='SpotsTab'
+        component={TabThreeScreen}
       />
-      <EditScreenInfo path="/screens/TabOneScreen.tsx" />
-    </View>
+      <HomeTab.Screen
+        name='EventsTab'
+        component={TabFourScreen}
+      />
+    </HomeTab.Navigator>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});
+};
